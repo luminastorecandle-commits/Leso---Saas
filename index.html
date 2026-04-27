@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lesoá Club — Painel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#F8F6F3;--sage:#7D9B76;--sage-l:#EBF2EA;--sage-d:#5a7354;--gold:#B8975A;--gold-l:#F5EDD8;--char:#1E1E1C;--muted:#6B6B68;--white:#fff;--red:#C0392B;--red-l:#FDECEA;--border:#E4E0D8;--sw:228px}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--char);display:flex;font-size:13px}
+.sidebar{width:var(--sw);background:var(--char);display:flex;flex-direction:column;height:100vh;flex-shrink:0}
+.logo-area{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.logo-row{display:flex;align-items:center;gap:10px}
+.logo-mark{width:34px;height:34px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:var(--char);flex-shrink:0}
+.logo-name{font-family:'Playfair Display',serif;font-size:14px;color:#fff;letter-spacing:0.03em}
+.logo-sub{font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:0.12em;text-transform:uppercase;margin-top:1px}
+.nav{flex:1;padding:14px 10px;overflow-y:auto}
+.nav-label{font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.28);padding:0 10px;margin:14px 0 5px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:1px;transition:all 0.12s}
+.ni:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8)}
+.ni.on{background:var(--sage);color:#fff}
+.ni svg{width:15px;height:15px;flex-shrink:0}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:9px;border-radius:8px;padding:1px 5px;font-weight:500}
+.nb.g{background:var(--gold);color:var(--char)}
+.sf{padding:14px;border-top:1px solid rgba(255,255,255,0.07)}
+.sa{display:flex;align-items:center;gap:9px}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:500;color:#fff;flex-shrink:0;font-size:11px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:500}
+.tb-right{display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;font-size:11px;font-family:'Jost',sans-serif;font-weight:500;cursor:pointer;border:none;transition:all 0.12s;letter-spacing:0.02em}
+.btn-p{background:var(--sage);color:#fff}.btn-p:hover{background:var(--sage-d)}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--muted)}.btn-o:hover{border-color:var(--sage);color:var(--sage)}
+.btn-r{background:var(--red-l);border:1px solid #f5c6c0;color:var(--red)}
+.content{flex:1;overflow-y:auto;padding:22px}
+.page{display:none}.page.on{display:block}
+.mg{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+.mc{background:#fff;border:1px solid var(--border);border-radius:11px;padding:16px 18px}
+.ml{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.mv{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;line-height:1}
+.md{font-size:10px;margin-top:5px}.up{color:var(--sage)}.dn{color:var(--red)}.wn{color:var(--gold)}
+.card{background:#fff;border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:16px}
+.ch{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ct{font-family:'Playfair Display',serif;font-size:14px;font-weight:500}
+.si{padding:7px 12px;border:1px solid var(--border);border-radius:7px;font-family:'Jost',sans-serif;font-size:11px;color:var(--char);background:var(--cream);outline:none;width:190px}
+.si:focus{border-color:var(--sage)}
+table{width:100%;border-collapse:collapse}
+th{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:9px 20px;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);font-weight:500}
+td{padding:12px 20px;border-bottom:1px solid var(--border);font-size:12px}
+tr:last-child td{border-bottom:none}
+tr.clickable:hover td{background:#FAFAF7;cursor:pointer}
+.avc{display:flex;align-items:center;gap:9px}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:500}
+.b-on{background:var(--sage-l);color:var(--sage-d)}
+.b-od{background:var(--red-l);color:var(--red)}
+.b-pa{background:var(--gold-l);color:#7a5c2a}
+.b-ca{background:#F0F0EE;color:var(--muted)}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.ag{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:16px}
+.dc{background:#fff;border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.dh{padding:9px 6px;text-align:center;border-bottom:1px solid var(--border);background:var(--cream)}
+.dn2{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.dd{font-family:'Playfair Display',serif;font-size:17px;font-weight:500}
+.dc.tod .dh{background:var(--sage);border-color:var(--sage)}
+.dc.tod .dn2{color:rgba(255,255,255,0.65)}
+.dc.tod .dd{color:#fff}
+.ap{margin:5px;padding:5px 7px;border-radius:5px;cursor:pointer}
+.alg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+.alc{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px 18px}
+.alc.rd{border-left:3px solid var(--red);border-radius:0 11px 11px 0}
+.alc.wn{border-left:3px solid var(--gold);border-radius:0 11px 11px 0}
+.alc.in{border-left:3px solid var(--sage);border-radius:0 11px 11px 0}
+.ac-n{font-size:11px;font-weight:500;margin-bottom:3px}
+.ac-d{font-size:11px;color:var(--muted);line-height:1.5}
+.ac-c{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;float:right;margin-top:-2px}
+.sl{padding:0}
+.si2{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border)}
+.si2:last-child{border-bottom:none}
+.st{font-family:'Playfair Display',serif;font-size:14px;min-width:46px}
+.sinfo{flex:1}
+.sn{font-size:12px}
+.sp{font-size:10px;color:var(--muted);margin-top:1px}
+.pb{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:500;letter-spacing:0.04em}
+.pb-b{background:#E8F4F2;color:#1a6b5e}
+.pb-f{background:#F0EBF8;color:#5a2d8a}
+.pb-bio{background:#FFF3E0;color:#8a5200}
+.filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.fb{padding:5px 12px;border-radius:20px;font-size:10px;font-family:'Jost',sans-serif;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--muted);transition:all 0.12s}
+.fb.on{background:var(--sage);color:#fff;border-color:var(--sage)}
+.fg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab{padding:10px 16px;font-size:11px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.12s}
+.tab.on{color:var(--sage);border-bottom-color:var(--sage);font-weight:500}
+.tab-content{display:none;padding:16px 20px}.tab-content.on{display:block}
+.prontu-grid{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.plan-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.plan-card{background:#fff;border:1px solid var(--border);border-radius:11px;overflow:hidden}
+.plan-card-body{padding:18px}
+.face-r{transition:opacity 0.15s;cursor:pointer}
+.face-r:hover{opacity:0.65}
+.face-r.sel{fill:var(--sage);opacity:0.55}
+.tip{background:var(--sage-l);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--sage-d);margin-top:12px;line-height:1.6}
+.portal-wrap{display:flex;gap:24px;align-items:flex-start}
+.phone-frame{width:270px;flex-shrink:0;background:var(--char);border-radius:28px;padding:10px}
+.phone-screen{background:var(--cream);border-radius:20px;overflow:hidden}
+.ph{background:var(--char);padding:16px;text-align:center}
+.pl{font-family:'Playfair Display',serif;font-size:14px;color:#fff;letter-spacing:0.06em}
+.pc{margin:12px;background:linear-gradient(135deg,#2C2C2A,#1a1a18);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.pc::before{content:'LC';position:absolute;right:-8px;top:-8px;font-family:'Playfair Display',serif;font-size:64px;color:rgba(184,151,90,0.07);font-weight:600}
+.pc-n{font-family:'Playfair Display',serif;font-size:14px;color:#fff;margin-bottom:3px}
+.pc-p{font-size:9px;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase}
+.pc-s{display:inline-block;background:var(--sage);color:#fff;font-size:8px;padding:2px 7px;border-radius:8px;letter-spacing:0.06em;text-transform:uppercase;margin-top:6px}
+.ps{padding:12px}
+.pst{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.prb{background:var(--border);border-radius:3px;height:4px;margin-top:5px}
+.prf{background:var(--sage);border-radius:3px;height:4px}
+.p-btn{display:block;width:calc(100% - 24px);margin:0 12px 12px;padding:11px;background:var(--sage);color:#fff;border:none;border-radius:9px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;cursor:pointer;text-align:center}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(30,30,28,0.5);z-index:1000;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:24px;width:480px;max-width:95%;max-height:90vh;overflow-y:auto}
+.modal h3{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:18px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.fg2{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fg2 label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500}
+.fg2 input,.fg2 select,.fg2 textarea{padding:8px 10px;border:1px solid var(--border);border-radius:7px;font-family:'Jost',sans-serif;font-size:12px;background:var(--cream);color:var(--char);outline:none}
+.fg2 input:focus,.fg2 select:focus,.fg2 textarea:focus{border-color:var(--sage)}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="logo-area">
+    <div class="logo-row">
+      <div class="logo-mark">LC</div>
+      <div><div class="logo-name">Lesoá Club</div><div class="logo-sub">Painel Admin</div></div>
+    </div>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Principal</div>
+    <div class="ni on" onclick="go('dashboard',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard <span class="nb g">3</span>
+    </div>
+    <div class="ni" onclick="go('pacientes',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Pacientes
+    </div>
+    <div class="ni" onclick="go('agenda',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Agenda <span class="nb">2</span>
+    </div>
+    <div class="nav-label">Clínico</div>
+    <div class="ni" onclick="go('prontuario',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      Prontuários
+    </div>
+    <div class="ni" onclick="go('portal',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      Portal do Paciente
+    </div>
+    <div class="nav-label">Financeiro</div>
+    <div class="ni" onclick="go('financeiro',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Financeiro <span class="nb">1</span>
+    </div>
+    <div class="ni" onclick="go('planos',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      Planos &amp; Assinaturas
+    </div>
+  </nav>
+  <div class="sf">
+    <div class="sa">
+      <div class="av" style="width:32px;height:32px;background:var(--sage)">LP</div>
+      <div><div style="font-size:11px;color:rgba(255,255,255,0.75)">Lesoá</div><div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:0.06em;text-transform:uppercase">Admin</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title" id="ptitle">Dashboard</div>
+    <div class="tb-right">
+      <button class="btn btn-o" onclick="go('portal',null)" style="font-size:11px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
+        Portal
+      </button>
+      <button class="btn btn-p" onclick="openModal('paciente')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span id="ctalbl">Nova paciente</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page on" id="page-dashboard">
+      <div class="mg">
+        <div class="mc"><div class="ml">MRR</div><div class="mv">R$4.280</div><div class="md up">↑ 12% vs mês ant.</div></div>
+        <div class="mc"><div class="ml">Pacientes ativas</div><div class="mv">24</div><div class="md up">↑ 3 novas este mês</div></div>
+        <div class="mc"><div class="ml">Sessões esta semana</div><div class="mv">8</div><div class="md" style="color:var(--muted)">3 hoje</div></div>
+        <div class="mc"><div class="ml">Inadimplência</div><div class="mv">4,2%</div><div class="md dn">1 paciente atrasada</div></div>
+        <div class="mc"><div class="ml">Churn do mês</div><div class="mv">1</div><div class="md wn">cancelou plano</div></div>
+      </div>
+      <div class="alg">
+        <div class="alc rd"><span class="ac-c" style="color:var(--red)">2</span><div class="ac-n">Pacientes inadimplentes</div><div class="ac-d">Ana Rodrigues e Carla Mendes com pagamento atrasado há mais de 5 dias.</div></div>
+        <div class="alc wn"><span class="ac-c" style="color:var(--gold)">4</span><div class="ac-n">Planos vencem em 7 dias</div><div class="ac-d">4 pacientes têm plano vencendo esta semana sem renovação confirmada.</div></div>
+        <div class="alc wn"><span class="ac-c" style="color:var(--gold)">3</span><div class="ac-n">Ciclo atrasado</div><div class="ac-d">3 pacientes há mais de 15 dias sem agendar após data sugerida.</div></div>
+        <div class="alc in"><span class="ac-c" style="color:var(--sage)">2</span><div class="ac-n">Aniversariantes da semana</div><div class="ac-d">Juliana Costa (qui) e Mariana Lima (sáb). Boa oportunidade de fidelização.</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Sessões de hoje — 27 de abril</div><span style="font-size:11px;color:var(--muted)">3 agendamentos</span></div>
+        <div class="sl">
+          <div class="si2"><div class="st">09:00</div><div class="av" style="width:30px;height:30px;background:#7D9B76">JC</div><div class="sinfo"><div class="sn">Juliana Costa</div><div class="sp">Plano Botox Trimestral · sessão 2 de 3</div></div><span class="pb pb-b">Botox</span></div>
+          <div class="si2"><div class="st">11:30</div><div class="av" style="width:30px;height:30px;background:#B8975A">FS</div><div class="sinfo"><div class="sn">Fernanda Silva</div><div class="sp">Plano Preenchimento Labial · sessão 1 de 2</div></div><span class="pb pb-f">Preenchimento</span></div>
+          <div class="si2"><div class="st">14:00</div><div class="av" style="width:30px;height:30px;background:#9B7D9B">ML</div><div class="sinfo"><div class="sn">Mariana Lima</div><div class="sp">Plano Bioestimulador Semestral · sessão 1 de 2</div></div><span class="pb pb-bio">Bioestimulador</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PACIENTES -->
+    <div class="page" id="page-pacientes">
+      <div class="filters">
+        <button class="fb on" onclick="filt(this)">Todas (24)</button>
+        <button class="fb" onclick="filt(this)">Ativas (20)</button>
+        <button class="fb" onclick="filt(this)">Inadimplentes (2)</button>
+        <button class="fb" onclick="filt(this)">Pausadas (1)</button>
+        <button class="fb" onclick="filt(this)">Botox</button>
+        <button class="fb" onclick="filt(this)">Preenchimento</button>
+        <button class="fb" onclick="filt(this)">Bioestimulador</button>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Pacientes da clínica</div><input class="si" placeholder="Buscar por nome ou CPF..."/></div>
+        <table>
+          <thead><tr><th>Paciente</th><th>Plano ativo</th><th>Próxima sessão</th><th>Sessões</th><th>Pagamento</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr class="clickable" onclick="openPerfil('Juliana Costa','Botox Trimestral','Ativa','#7D9B76')"><td><div class="avc"><div class="av" style="width:30px;height:30px;background:#7D9B76">JC</div><div><div style="font-weight:500">Juliana Costa</div><div style="font-size:10px;color:var(--muted)">Botox Trimestral</div></div></div></td><td>Botox · 3 meses</td><td>Hoje, 09:00</td><td>2 / 3</td><td style="color:var(--sage)">Em dia</td><td><span class="badge b-on"><span class="dot"></span> Ativa</span></td></tr>
+            <tr class="clickable" onclick="openPerfil('Fernanda Silva','Preenchimento Labial','Ativa','#B8975A')"><td><div class="avc"><div class="av" style="width:30px;height:30px;background:#B8975A">FS</div><div><div style="font-weight:500">Fernanda Silva</div><div style="font-size:10px;color:var(--muted)">Preenchimento Labial</div></div></div></td><td>Preenchimento · 6 meses</td><td>Hoje, 11:30</td><td>1 / 2</td><td style="color:var(--sage)">Em dia</td><td><span class="badge b-on"><span class="dot"></span> Ativa</span></td></tr>
+            <tr class="clickable" onclick="openPerfil('Ana Rodrigues','Botox Trimestral','Inadimplente','#C0392B')"><td><div class="avc"><div class="av" style="width:30px;height:30px;background:#C0392B">AR</div><div><div style="font-weight:500">Ana Rodrigues</div><div style="font-size:10px;color:var(--muted)">Botox Trimestral</div></div></div></td><td>Botox · 3 meses</td><td style="color:var(--red)">Bloqueada</td><td>1 / 3</td><td style="color:var(--red)">Atrasado 8 dias</td><td><span class="badge b-od"><span class="dot"></span> Inadimplente</span></td></tr>
+            <tr class="clickable" onclick="openPerfil('Mariana Lima','Bioestimulador Semestral','Ativa','#9B7D9B')"><td><div class="avc"><div class="av" style="width:30px;height:30px;background:#9B7D9B">ML</div><div><div style="font-weight:500">Mariana Lima</div><div style="font-size:10px;color:var(--muted)">Bioestimulador Semestral</div></div></div></td><td>Bioestimulador · 6 meses</td><td>Hoje, 14:00</td><td>1 / 2</td><td style="color:var(--sage)">Em dia</td><td><span class="badge b-on"><span class="dot"></span> Ativa</span></td></tr>
+            <tr class="clickable" onclick="openPerfil('Carla Mendes','Skinbooster Trimestral','Inadimplente','#7D9B9B')"><td><div class="avc"><div class="av" style="width:30px;height:30px;background:#7D9B9B">CM</div><div><div style="font-weight:500">Carla Mendes</div><div style="font-size:10px;color:var(--muted)">Skinbooster</div></div></div></td><td>Skinbooster · 3 meses</td><td style="color:var(--red)">Bloqueada</td><td>2 / 3</td><td style="color:var(--red)">Atrasado 12 dias</td><td><span class="badge b-od"><span class="dot"></span> Inadimplente</span></td></tr>
+            <tr class="clickable" onclick="openPerfil('Patrícia Santos','Botox Trimestral','Pausada','#9B9B7D')"><td><div class="avc"><div class="av" style="width:30px;height:30px;background:#9B9B7D">PS</div><div><div style="font-weight:500">Patrícia Santos</div><div style="font-size:10px;color:var(--muted)">Botox Trimestral</div></div></div></td><td>Botox · 3 meses</td><td>—</td><td>1 / 3</td><td style="color:var(--gold)">Pausado</td><td><span class="badge b-pa"><span class="dot"></span> Pausada</span></td></tr>
+            <tr class="clickable" onclick="openPerfil('Beatriz Moura','Preenchimento Facial','Ativa','#7D7D9B')"><td><div class="avc"><div class="av" style="width:30px;height:30px;background:#7D7D9B">BM</div><div><div style="font-weight:500">Beatriz Moura</div><div style="font-size:10px;color:var(--muted)">Preenchimento Facial</div></div></div></td><td>Preenchimento · 6 meses</td><td>28 abr, 10:00</td><td>3 / 4</td><td style="color:var(--sage)">Em dia</td><td><span class="badge b-on"><span class="dot"></span> Ativa</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- AGENDA -->
+    <div class="page" id="page-agenda">
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
+        <button class="btn btn-o">&#8592; Anterior</button>
+        <span style="font-family:'Playfair Display',serif;font-size:14px;flex:1;text-align:center">27 abril – 3 maio 2026</span>
+        <button class="btn btn-o">Próxima &#8594;</button>
+        <button class="btn btn-p" onclick="openModal('agenda')">+ Agendar</button>
+      </div>
+      <div class="ag">
+        <div class="dc tod"><div class="dh"><div class="dn2">Seg</div><div class="dd">27</div></div>
+          <div class="ap" style="background:#EBF2EA"><div style="font-size:9px;font-weight:500;color:#5a7354">09:00</div><div style="font-size:10px">Juliana C.</div></div>
+          <div class="ap" style="background:#F0EBF8"><div style="font-size:9px;font-weight:500;color:#5a2d8a">11:30</div><div style="font-size:10px">Fernanda S.</div></div>
+          <div class="ap" style="background:#FFF3E0"><div style="font-size:9px;font-weight:500;color:#8a5200">14:00</div><div style="font-size:10px">Mariana L.</div></div>
+        </div>
+        <div class="dc"><div class="dh"><div class="dn2">Ter</div><div class="dd">28</div></div><div class="ap" style="background:#EBF2EA"><div style="font-size:9px;font-weight:500;color:#5a7354">10:00</div><div style="font-size:10px">Beatriz M.</div></div></div>
+        <div class="dc"><div class="dh"><div class="dn2">Qua</div><div class="dd">29</div></div>
+          <div class="ap" style="background:#F0EBF8"><div style="font-size:9px;font-weight:500;color:#5a2d8a">09:30</div><div style="font-size:10px">Camila R.</div></div>
+          <div class="ap" style="background:#EBF2EA"><div style="font-size:9px;font-weight:500;color:#5a7354">15:00</div><div style="font-size:10px">Daniela F.</div></div>
+        </div>
+        <div class="dc"><div class="dh"><div class="dn2">Qui</div><div class="dd">30</div></div><div class="ap" style="background:#FFF3E0"><div style="font-size:9px;font-weight:500;color:#8a5200">11:00</div><div style="font-size:10px">Larissa T.</div></div></div>
+        <div class="dc"><div class="dh"><div class="dn2">Sex</div><div class="dd">01</div></div>
+          <div class="ap" style="background:#EBF2EA"><div style="font-size:9px;font-weight:500;color:#5a7354">09:00</div><div style="font-size:10px">Renata A.</div></div>
+          <div class="ap" style="background:#EBF2EA"><div style="font-size:9px;font-weight:500;color:#5a7354">13:30</div><div style="font-size:10px">Sabrina P.</div></div>
+        </div>
+        <div class="dc"><div class="dh"><div class="dn2">Sáb</div><div class="dd">02</div></div><div class="ap" style="background:#F5EDD8"><div style="font-size:9px;font-weight:500;color:#7a5c2a">10:00</div><div style="font-size:10px">Vanessa O.</div></div></div>
+        <div class="dc"><div class="dh"><div class="dn2">Dom</div><div class="dd">03</div></div><div style="padding:10px;text-align:center;font-size:10px;color:var(--muted)">Fechado</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Próximas sessões sugeridas pelo sistema</div></div>
+        <table><thead><tr><th>Paciente</th><th>Procedimento</th><th>Data sugerida</th><th>Ciclo</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#7D9B76;font-size:9px">JC</div><span>Juliana Costa</span></div></td><td>Botox</td><td>27 jul 2026</td><td>3 meses</td><td><span class="badge b-on">Aguardando agendamento</span></td></tr>
+          <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#B8975A;font-size:9px">FS</div><span>Fernanda Silva</span></div></td><td>Preenchimento</td><td>27 out 2026</td><td>6 meses</td><td><span class="badge b-on">Aguardando agendamento</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- PRONTUÁRIO -->
+    <div class="page" id="page-prontuario">
+      <div class="prontu-grid">
+        <div>
+          <div class="card">
+            <div class="ch"><div class="ct">Pacientes</div></div>
+            <div style="padding:12px">
+              <input class="si" style="width:100%;margin-bottom:10px" placeholder="Buscar paciente..."/>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--sage);border-radius:8px;background:var(--sage-l);cursor:pointer">
+                  <div class="av" style="width:30px;height:30px;background:#7D9B76">JC</div>
+                  <div><div style="font-size:12px;font-weight:500">Juliana Costa</div><div style="font-size:10px;color:var(--muted)">Botox · última: 27 jan 2026</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;cursor:pointer">
+                  <div class="av" style="width:30px;height:30px;background:#B8975A">FS</div>
+                  <div><div style="font-size:12px">Fernanda Silva</div><div style="font-size:10px;color:var(--muted)">Preenchimento · última: 27 out 2025</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;cursor:pointer">
+                  <div class="av" style="width:30px;height:30px;background:#9B7D9B">ML</div>
+                  <div><div style="font-size:12px">Mariana Lima</div><div style="font-size:10px;color:var(--muted)">Bioestimulador · última: 27 out 2025</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Prontuário — Juliana Costa</div><button class="btn btn-p" style="font-size:10px;padding:5px 11px">+ Registrar sessão</button></div>
+          <div class="tabs">
+            <div class="tab on" onclick="switchTab(this,'mapa')">Mapa facial</div>
+            <div class="tab" onclick="switchTab(this,'historico')">Histórico</div>
+            <div class="tab" onclick="switchTab(this,'info')">Informações clínicas</div>
+          </div>
+          <div class="tab-content on" id="tab-mapa">
+            <div style="background:var(--red-l);border:1px solid #f5c6c0;border-radius:7px;padding:9px 13px;margin-bottom:12px;font-size:11px;color:var(--red)">&#9888; Alergia registrada: Lidocaína — confirmar com a paciente antes de iniciar</div>
+            <div style="display:flex;justify-content:center;margin:10px 0">
+              <svg viewBox="0 0 200 280" width="170" style="cursor:pointer">
+                <ellipse cx="100" cy="130" rx="70" ry="90" fill="#F5EDD8" stroke="#B8975A" stroke-width="0.8"/>
+                <ellipse cx="100" cy="60" rx="55" ry="40" fill="#F5EDD8" stroke="#B8975A" stroke-width="0.8"/>
+                <rect class="face-r sel" x="70" y="50" width="60" height="20" rx="4" fill-opacity="0.5"/><text x="100" y="64" text-anchor="middle" font-size="9" fill="#5a7354" font-family="Jost,sans-serif">Testa ✓ 20u</text>
+                <rect class="face-r" x="85" y="78" width="30" height="16" rx="4" fill="#F5EDD8" fill-opacity="0.5"/><text x="100" y="90" text-anchor="middle" font-size="9" fill="#6B6B68" font-family="Jost,sans-serif">Glabela</text>
+                <ellipse class="face-r" cx="65" cy="115" rx="18" ry="12" fill="#F5EDD8" fill-opacity="0.5"/><text x="65" y="118" text-anchor="middle" font-size="8" fill="#6B6B68" font-family="Jost,sans-serif">P.Galinha</text>
+                <ellipse class="face-r" cx="135" cy="115" rx="18" ry="12" fill="#F5EDD8" fill-opacity="0.5"/><text x="135" y="118" text-anchor="middle" font-size="8" fill="#6B6B68" font-family="Jost,sans-serif">P.Galinha</text>
+                <rect class="face-r" x="78" y="155" width="44" height="14" rx="4" fill="#F5EDD8" fill-opacity="0.5"/><text x="100" y="165" text-anchor="middle" font-size="9" fill="#6B6B68" font-family="Jost,sans-serif">Bigode chin.</text>
+                <ellipse class="face-r" cx="100" cy="188" rx="20" ry="10" fill="#F5EDD8" fill-opacity="0.5"/><text x="100" y="191" text-anchor="middle" font-size="9" fill="#6B6B68" font-family="Jost,sans-serif">Lábios</text>
+                <ellipse class="face-r" cx="100" cy="212" rx="15" ry="9" fill="#F5EDD8" fill-opacity="0.5"/><text x="100" y="215" text-anchor="middle" font-size="9" fill="#6B6B68" font-family="Jost,sans-serif">Queixo</text>
+              </svg>
+            </div>
+            <div style="font-size:10px;color:var(--muted);text-align:center">Clique nas regiões para marcar aplicação</div>
+          </div>
+          <div class="tab-content" id="tab-historico">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="border:1px solid var(--border);border-radius:9px;padding:12px 14px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><div style="font-size:12px;font-weight:500">27 jan 2026</div><span class="pb pb-b">Botox</span></div>
+                <div style="font-size:11px;color:var(--muted)">Testa: 20u · Glabela: 10u · Total: 30u</div>
+                <div style="font-size:11px;color:var(--muted)">Produto: Botox Allergan · Lote: BTX2024-081</div>
+                <div style="font-size:11px;color:var(--sage);margin-top:3px">Reações: Nenhuma</div>
+              </div>
+              <div style="border:1px solid var(--border);border-radius:9px;padding:12px 14px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><div style="font-size:12px;font-weight:500">27 out 2025</div><span class="pb pb-b">Botox</span></div>
+                <div style="font-size:11px;color:var(--muted)">Testa: 20u · Glabela: 10u · Pés de galinha: 8u cada · Total: 46u</div>
+                <div style="font-size:11px;color:var(--muted)">Produto: Botox Allergan · Lote: BTX2024-052</div>
+                <div style="font-size:11px;color:var(--sage);margin-top:3px">Reações: Nenhuma</div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-info">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:3px">Alergias</div><div style="font-size:12px;color:var(--red)">Lidocaína</div></div>
+              <div><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:3px">Contraindicações</div><div style="font-size:12px">Nenhuma</div></div>
+              <div><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:3px">Medicamentos</div><div style="font-size:12px">Anticoncepcional oral</div></div>
+              <div><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:3px">Próxima sessão sugerida</div><div style="font-size:12px;color:var(--sage)">27 jul 2026</div></div>
+            </div>
+            <div><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:3px">Observações</div><div style="font-size:12px;color:var(--muted)">Prefere sessões pela manhã. Sensível na região da testa.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PORTAL -->
+    <div class="page" id="page-portal">
+      <div style="text-align:center;margin-bottom:16px;font-size:12px;color:var(--muted)">Preview do portal da paciente · <span style="color:var(--sage);font-weight:500">lesoa.club/paciente/jc-abc123</span></div>
+      <div class="portal-wrap">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="ph"><div class="pl">Lesoá Club</div></div>
+            <div class="pc">
+              <div class="pc-n">Juliana Costa</div>
+              <div class="pc-p">Plano Botox Trimestral</div>
+              <div class="pc-s">Paciente Ativa</div>
+            </div>
+            <div class="ps">
+              <div class="pst">Sua próxima sessão</div>
+              <div style="background:#fff;border-radius:9px;padding:11px">
+                <div style="font-family:'Playfair Display',serif;font-size:20px">91 dias</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px">27 de julho de 2026</div>
+                <div style="margin-top:8px">
+                  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:3px"><span>Sessões usadas</span><span>2 de 3</span></div>
+                  <div class="prb"><div class="prf" style="width:66%"></div></div>
+                </div>
+              </div>
+            </div>
+            <button class="p-btn">Agendar minha sessão</button>
+            <div class="ps">
+              <div class="pst">Histórico</div>
+              <div style="background:#fff;border-radius:9px;padding:10px;font-size:11px">
+                <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span>27 jan 2026</span><span style="color:var(--sage)">Botox · Testa</span></div>
+                <div style="display:flex;justify-content:space-between;padding:5px 0"><span>27 out 2025</span><span style="color:var(--sage)">Botox · Testa+Glabela</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="card">
+            <div class="ch"><div class="ct">Links dos portais</div><button class="btn btn-o" style="font-size:10px">Gerar novo link</button></div>
+            <table><thead><tr><th>Paciente</th><th>Link do portal</th><th>Último acesso</th><th>Ação</th></tr></thead>
+            <tbody>
+              <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#7D9B76;font-size:9px">JC</div><span>Juliana Costa</span></div></td><td style="font-size:10px;color:var(--sage)">/paciente/jc-abc123</td><td style="color:var(--muted)">Hoje, 08:32</td><td><button class="btn btn-o" style="font-size:10px;padding:4px 10px" onclick="alert('Link copiado!\n\nlesoa.club/paciente/jc-abc123')">Copiar link</button></td></tr>
+              <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#B8975A;font-size:9px">FS</div><span>Fernanda Silva</span></div></td><td style="font-size:10px;color:var(--sage)">/paciente/fs-def456</td><td style="color:var(--muted)">Ontem, 19:15</td><td><button class="btn btn-o" style="font-size:10px;padding:4px 10px" onclick="alert('Link copiado!\n\nlesoa.club/paciente/fs-def456')">Copiar link</button></td></tr>
+              <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#9B7D9B;font-size:9px">ML</div><span>Mariana Lima</span></div></td><td style="font-size:10px;color:var(--sage)">/paciente/ml-ghi789</td><td style="color:var(--muted)">3 dias atrás</td><td><button class="btn btn-o" style="font-size:10px;padding:4px 10px" onclick="alert('Link copiado!\n\nlesoa.club/paciente/ml-ghi789')">Copiar link</button></td></tr>
+            </tbody></table>
+          </div>
+          <div class="tip">No app real cada paciente recebe o link pelo WhatsApp logo após o cadastro. Ela acessa o portal sem precisar de senha — só com o link único.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCEIRO -->
+    <div class="page" id="page-financeiro">
+      <div class="fg">
+        <div class="mc"><div class="ml">MRR</div><div class="mv">R$4.280</div><div class="md up">↑ 12%</div></div>
+        <div class="mc"><div class="ml">Recebido este mês</div><div class="mv">R$3.840</div><div class="md" style="color:var(--muted)">89% do MRR</div></div>
+        <div class="mc"><div class="ml">Inadimplente</div><div class="mv">R$440</div><div class="md dn">2 pacientes</div></div>
+        <div class="mc"><div class="ml">A receber (30d)</div><div class="mv">R$4.280</div><div class="md" style="color:var(--muted)">próximo ciclo</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Transações</div>
+          <div style="display:flex;gap:7px">
+            <button class="btn btn-o" style="font-size:10px">Exportar CSV</button>
+            <select style="padding:5px 9px;border:1px solid var(--border);border-radius:7px;font-size:11px;font-family:'Jost',sans-serif;background:var(--cream);color:var(--char)"><option>Abril 2026</option><option>Março 2026</option></select>
+          </div>
+        </div>
+        <table><thead><tr><th>Data</th><th>Paciente</th><th>Plano</th><th>Valor</th><th>Método</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>01/04/2026</td><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#7D9B76;font-size:9px">JC</div><span>Juliana Costa</span></div></td><td>Botox Trimestral</td><td style="font-weight:500">R$280</td><td>Pix</td><td><span class="badge b-on">Pago</span></td></tr>
+          <tr><td>01/04/2026</td><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#B8975A;font-size:9px">FS</div><span>Fernanda Silva</span></div></td><td>Preenchimento</td><td style="font-weight:500">R$350</td><td>Pix</td><td><span class="badge b-on">Pago</span></td></tr>
+          <tr><td>01/04/2026</td><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#C0392B;font-size:9px">AR</div><span>Ana Rodrigues</span></div></td><td>Botox Trimestral</td><td style="font-weight:500">R$280</td><td>—</td><td><span class="badge b-od">Atrasado</span></td></tr>
+          <tr><td>01/04/2026</td><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#9B7D9B;font-size:9px">ML</div><span>Mariana Lima</span></div></td><td>Bioestimulador</td><td style="font-weight:500">R$420</td><td>Pix</td><td><span class="badge b-on">Pago</span></td></tr>
+          <tr><td>01/04/2026</td><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#7D7D9B;font-size:9px">BM</div><span>Beatriz Moura</span></div></td><td>Preenchimento Facial</td><td style="font-weight:500">R$380</td><td>Manual</td><td><span class="badge b-on">Pago</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- PLANOS -->
+    <div class="page" id="page-planos">
+      <div class="plan-cards">
+        <div class="plan-card" style="border-top:3px solid var(--sage)">
+          <div class="plan-card-body">
+            <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Botox Trimestral</div>
+            <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:500">R$280<span style="font-size:12px;font-weight:400;color:var(--muted)">/mês</span></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">1 sessão · 3 meses · R$840 total</div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;color:var(--sage);font-weight:500">10 pacientes</span><span class="badge b-on">Ativo</span>
+            </div>
+          </div>
+        </div>
+        <div class="plan-card" style="border-top:3px solid #9B7D9B">
+          <div class="plan-card-body">
+            <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Preenchimento Semestral</div>
+            <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:500">R$350<span style="font-size:12px;font-weight:400;color:var(--muted)">/mês</span></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">2 sessões · 6 meses · R$2.100 total</div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;color:var(--sage);font-weight:500">7 pacientes</span><span class="badge b-on">Ativo</span>
+            </div>
+          </div>
+        </div>
+        <div class="plan-card" style="border-top:3px dashed var(--gold);cursor:pointer" onclick="openModal('plano')">
+          <div class="plan-card-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:110px">
+            <div style="width:32px;height:32px;border:1.5px dashed var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gold);margin-bottom:7px">+</div>
+            <div style="font-size:12px;color:var(--muted)">Criar novo plano</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">Todas as assinaturas ativas</div><span style="font-size:11px;color:var(--muted)">24 pacientes</span></div>
+        <table><thead><tr><th>Paciente</th><th>Plano</th><th>Início</th><th>Próxima cobrança</th><th>Valor</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#7D9B76;font-size:9px">JC</div><span>Juliana Costa</span></div></td><td>Botox Trimestral</td><td>27 jan 2026</td><td>01 mai 2026</td><td style="font-weight:500">R$280</td><td><span class="badge b-on">Ativa</span></td></tr>
+          <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#B8975A;font-size:9px">FS</div><span>Fernanda Silva</span></div></td><td>Preenchimento</td><td>27 out 2025</td><td>01 mai 2026</td><td style="font-weight:500">R$350</td><td><span class="badge b-on">Ativa</span></td></tr>
+          <tr><td><div class="avc"><div class="av" style="width:24px;height:24px;background:#C0392B;font-size:9px">AR</div><span>Ana Rodrigues</span></div></td><td>Botox Trimestral</td><td>27 jan 2026</td><td style="color:var(--red)">Atrasado</td><td style="font-weight:500">R$280</td><td><span class="badge b-od">Inadimplente</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL NOVA PACIENTE / AGENDAR / PLANO -->
+<div class="overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="modal-title">Nova paciente</h3>
+    <div id="modal-body">
+      <div class="form-row">
+        <div class="fg2"><label>Nome completo</label><input type="text" placeholder="Ex: Juliana Costa"/></div>
+        <div class="fg2"><label>WhatsApp</label><input type="tel" placeholder="(11) 99999-9999"/></div>
+      </div>
+      <div class="form-row">
+        <div class="fg2"><label>CPF</label><input type="text" placeholder="000.000.000-00"/></div>
+        <div class="fg2"><label>Data de nascimento</label><input type="date"/></div>
+      </div>
+      <div class="fg2"><label>Plano de assinatura</label>
+        <select><option>Botox Trimestral — R$280/mês</option><option>Preenchimento Semestral — R$350/mês</option><option>Bioestimulador Semestral — R$420/mês</option></select>
+      </div>
+      <div class="form-row">
+        <div class="fg2"><label>Data de início</label><input type="date"/></div>
+        <div class="fg2"><label>Forma de pagamento</label><select><option>Pix manual</option><option>Dinheiro</option><option>Cartão</option></select></div>
+      </div>
+      <div class="fg2"><label>Alergias / contraindicações</label><textarea rows="2" placeholder="Ex: Lidocaína, gestante..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-o" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-p" onclick="saveAction()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PERFIL PACIENTE -->
+<div class="overlay" id="modal-perfil" onclick="if(event.target===this)document.getElementById('modal-perfil').classList.remove('show')">
+  <div class="modal" style="width:500px" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div class="av" style="width:44px;height:44px;font-size:14px" id="p-av">JC</div>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500" id="p-nome">Juliana Costa</div>
+        <div style="font-size:11px;color:var(--muted)" id="p-plano">Botox Trimestral</div>
+      </div>
+      <span class="badge b-on" id="p-status" style="margin-left:auto">Ativa</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="background:var(--cream);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Sessões</div><div style="font-family:'Playfair Display',serif;font-size:18px;margin-top:3px">2/3</div></div>
+      <div style="background:var(--cream);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Próxima</div><div style="font-size:12px;margin-top:5px;font-weight:500;color:var(--sage)">27 jul 26</div></div>
+      <div style="background:var(--cream);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em">Pagamento</div><div style="font-size:12px;margin-top:5px;font-weight:500;color:var(--sage)" id="p-pag">Em dia</div></div>
+    </div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      <button class="btn btn-p" style="font-size:11px" onclick="go('prontuario',null);document.getElementById('modal-perfil').classList.remove('show')">Ver prontuário</button>
+      <button class="btn btn-o" style="font-size:11px" onclick="go('agenda',null);document.getElementById('modal-perfil').classList.remove('show')">Agendar sessão</button>
+      <button class="btn btn-o" style="font-size:11px" onclick="alert('Link copiado!\n\nlesoa.club/paciente/jc-abc123')">Copiar link portal</button>
+      <button class="btn" style="font-size:11px;background:var(--gold-l);border:1px solid #d4b07a;color:#7a5c2a">Pausar plano</button>
+      <button class="btn btn-r" style="font-size:11px">Cancelar plano</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const pages={dashboard:{t:'Dashboard',cta:'Nova paciente'},pacientes:{t:'Pacientes',cta:'Nova paciente'},agenda:{t:'Agenda',cta:'Agendar sessão'},prontuario:{t:'Prontuários',cta:'Registrar sessão'},portal:{t:'Portal do Paciente',cta:'Copiar link'},financeiro:{t:'Financeiro',cta:'Exportar CSV'},planos:{t:'Planos & Assinaturas',cta:'Novo plano'}};
+
+function go(p,el){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
+  const pg=document.getElementById('page-'+p);
+  if(pg)pg.classList.add('on');
+  if(el)el.classList.add('on');
+  else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+p+"'"))n.classList.add('on')});
+  document.getElementById('ptitle').textContent=pages[p]?.t||p;
+  document.getElementById('ctalbl').textContent=pages[p]?.cta||'Nova paciente';
+}
+
+function filt(btn){btn.closest('.filters').querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));btn.classList.add('on')}
+
+function switchTab(el,id){
+  el.closest('.card').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  el.closest('.card').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  const tc=document.getElementById('tab-'+id);
+  if(tc)tc.classList.add('on');
+}
+
+const modalTitles={paciente:'Nova paciente',agenda:'Novo agendamento',plano:'Novo plano'};
+function openModal(type){
+  document.getElementById('modal-title').textContent=modalTitles[type]||'Nova paciente';
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function saveAction(){closeModal();alert('Salvo com sucesso!\n\nNo app real: dados salvos no Supabase automaticamente.')}
+
+function openPerfil(nome,plano,status,cor){
+  document.getElementById('p-nome').textContent=nome;
+  document.getElementById('p-plano').textContent=plano;
+  document.getElementById('p-av').textContent=nome.split(' ').map(w=>w[0]).join('').substring(0,2);
+  document.getElementById('p-av').style.background=cor||'var(--sage)';
+  const s=document.getElementById('p-status');
+  s.textContent=status;
+  s.className='badge '+(status==='Ativa'?'b-on':status==='Inadimplente'?'b-od':status==='Pausada'?'b-pa':'b-ca');
+  document.getElementById('p-pag').textContent=status==='Inadimplente'?'Atrasado':status==='Pausada'?'Pausado':'Em dia';
+  document.getElementById('p-pag').style.color=status==='Inadimplente'?'var(--red)':status==='Pausada'?'var(--gold)':'var(--sage)';
+  document.getElementById('modal-perfil').classList.add('show');
+}
+
+document.querySelectorAll('.face-r').forEach(r=>r.addEventListener('click',()=>r.classList.toggle('sel')));
+</script>
+</body>
+</html>
