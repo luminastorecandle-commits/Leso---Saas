@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lesoá Club — Beleza por Assinatura</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#F7F4EF;
+  --cream-d:#EDE8DF;
+  --char:#1A1916;
+  --char-l:#2E2C28;
+  --gold:#B8915A;
+  --gold-l:#D4A96A;
+  --gold-pale:#F5EDD8;
+  --sage:#6D8E67;
+  --sage-l:#EBF2EA;
+  --muted:#7A776F;
+  --white:#fff;
+  --border:#E0D9CE;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--char);overflow-x:hidden;font-size:15px;line-height:1.6}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.75s cubic-bezier(0.4,0,0.2,1),transform 0.75s cubic-bezier(0.4,0,0.2,1)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity 0.8s cubic-bezier(0.4,0,0.2,1),transform 0.8s cubic-bezier(0.4,0,0.2,1)}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity 0.8s cubic-bezier(0.4,0,0.2,1),transform 0.8s cubic-bezier(0.4,0,0.2,1)}
+.reveal-right.visible{opacity:1;transform:none}
+.delay-1{transition-delay:0.1s}
+.delay-2{transition-delay:0.2s}
+.delay-3{transition-delay:0.3s}
+.delay-4{transition-delay:0.4s}
+.delay-5{transition-delay:0.55s}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;transition:background 0.3s,box-shadow 0.3s}
+nav.scrolled{background:rgba(247,244,239,0.96);backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-mark{width:32px;height:32px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:12px;font-weight:600;color:var(--char)}
+.nav-name{font-family:'Playfair Display',serif;font-size:15px;color:var(--char);letter-spacing:0.04em}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:12px;text-decoration:none;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:500;transition:color 0.15s}
+.nav-links a:hover{color:var(--char)}
+.nav-cta{background:var(--char);color:var(--cream)!important;padding:9px 22px;border-radius:8px;transition:background 0.15s!important}
+.nav-cta:hover{background:var(--gold)!important;color:var(--char)!important}
+.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.nav-burger span{display:block;width:22px;height:1.5px;background:var(--char);transition:all 0.2s}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-grain{position:absolute;inset:0;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px}
+.hero-blob-1{position:absolute;width:600px;height:600px;background:radial-gradient(ellipse,rgba(184,145,90,0.12) 0%,transparent 70%);top:-100px;right:-100px;border-radius:50%;animation:float 8s ease-in-out infinite}
+.hero-blob-2{position:absolute;width:500px;height:500px;background:radial-gradient(ellipse,rgba(109,142,103,0.1) 0%,transparent 70%);bottom:-80px;left:-100px;border-radius:50%;animation:float 10s ease-in-out infinite reverse}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.02)}}
+.hero-inner{position:relative;z-index:1;max-width:820px}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--gold-pale);border:1px solid rgba(184,145,90,0.3);color:var(--gold);font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;padding:6px 16px;border-radius:40px;margin-bottom:28px}
+.hero-badge span{width:5px;height:5px;background:var(--gold);border-radius:50%;display:block}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(42px,7vw,88px);font-weight:500;line-height:1.06;letter-spacing:-0.01em;margin-bottom:14px}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.5vw,22px);color:var(--muted);font-weight:300;line-height:1.7;max-width:560px;margin:0 auto 44px;font-style:italic}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--char);color:var(--cream);font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:15px 36px;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:all 0.2s}
+.btn-primary:hover{background:var(--gold);color:var(--char);transform:translateY(-1px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;color:var(--char);font-size:12px;font-weight:500;letter-spacing:0.08em;text-decoration:none;border-bottom:1px solid var(--char);padding-bottom:2px;transition:all 0.2s}
+.btn-secondary:hover{color:var(--gold);border-color:var(--gold)}
+.hero-note{margin-top:20px;font-size:11px;color:var(--muted);letter-spacing:0.04em}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1}
+.hero-scroll span{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrolldown 1.8s ease-in-out infinite}
+@keyframes scrolldown{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ── MARQUEE ── */
+.marquee-wrap{background:var(--char);padding:14px 0;overflow:hidden}
+.marquee-track{display:flex;gap:0;white-space:nowrap;animation:marquee 22s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+.mi{display:inline-flex;align-items:center;gap:14px;padding:0 32px;font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:rgba(255,255,255,0.55);letter-spacing:0.04em}
+.mi-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SECTIONS ── */
+section{padding:96px 24px}
+.container{max-width:1080px;margin:0 auto}
+.section-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:14px}
+.section-h2{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,48px);font-weight:500;line-height:1.15;margin-bottom:16px}
+.section-h2 em{font-style:italic;color:var(--gold)}
+.section-desc{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--muted);font-weight:300;line-height:1.7;font-style:italic;max-width:520px}
+
+/* ── HOW IT WORKS ── */
+.how{background:var(--white)}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.how-steps{display:flex;flex-direction:column;gap:36px;margin-top:32px}
+.step{display:flex;gap:20px}
+.step-num{flex-shrink:0;width:40px;height:40px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);position:relative}
+.step-num::after{content:'';position:absolute;top:40px;left:50%;width:1px;height:28px;background:linear-gradient(to bottom,var(--border),transparent)}
+.step:last-child .step-num::after{display:none}
+.step-body h4{font-size:14px;font-weight:600;letter-spacing:0.02em;margin-bottom:5px}
+.step-body p{font-size:13px;color:var(--muted);line-height:1.65}
+.how-visual{position:relative}
+.how-card{background:var(--char);border-radius:20px;padding:28px;color:#fff;position:relative;overflow:hidden}
+.how-card::before{content:'LC';position:absolute;right:-16px;top:-16px;font-family:'Playfair Display',serif;font-size:110px;color:rgba(184,145,90,0.06);font-weight:600;line-height:1}
+.hc-badge{display:inline-flex;background:var(--sage);color:#fff;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:16px}
+.hc-name{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:2px}
+.hc-plan{font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase}
+.hc-price{font-family:'Playfair Display',serif;font-size:36px;font-weight:500;margin:18px 0 4px}
+.hc-price span{font-size:14px;font-weight:300;color:rgba(255,255,255,0.5)}
+.hc-sessions{display:flex;gap:8px;margin:16px 0}
+.hc-dot{width:12px;height:12px;border-radius:50%;background:var(--sage);border:2px solid var(--sage)}
+.hc-dot.used{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2)}
+.hc-bar{background:rgba(255,255,255,0.1);border-radius:4px;height:4px;margin-bottom:6px}
+.hc-bar-fill{background:var(--sage);border-radius:4px;height:4px;width:66%}
+.hc-info{font-size:10px;color:rgba(255,255,255,0.35);display:flex;justify-content:space-between}
+.hc-btn{display:block;width:100%;background:var(--gold);color:var(--char);border:none;border-radius:9px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:13px;margin-top:20px;cursor:pointer;transition:background 0.15s}
+.hc-btn:hover{background:var(--gold-l)}
+.how-float{position:absolute;right:-20px;bottom:-20px;background:var(--gold-pale);border:1px solid rgba(184,145,90,0.2);border-radius:12px;padding:12px 16px;font-size:11px;box-shadow:0 8px 32px rgba(0,0,0,0.08)}
+.hf-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px}
+.hf-val{font-family:'Playfair Display',serif;font-size:18px;color:var(--sage)}
+
+/* ── PLANOS ── */
+.plans{background:var(--cream)}
+.plans-header{text-align:center;margin-bottom:56px}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plan{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative;transition:transform 0.25s,box-shadow 0.25s}
+.plan:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.08)}
+.plan.featured{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 16px 48px rgba(184,145,90,0.15)}
+.plan-top{padding:28px 28px 22px}
+.plan-ribbon{position:absolute;top:18px;right:18px;background:var(--gold);color:var(--char);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+.plan-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-size:20px}
+.plan-name{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px}
+.plan-price{font-family:'Playfair Display',serif;font-size:38px;font-weight:500;line-height:1;margin-bottom:4px}
+.plan-price sub{font-size:14px;font-weight:400;vertical-align:super;margin-right:2px;color:var(--muted)}
+.plan-period{font-size:12px;color:var(--muted)}
+.plan-divider{height:1px;background:var(--border);margin:22px 28px}
+.plan-features{padding:0 28px 28px;display:flex;flex-direction:column;gap:11px}
+.pf{display:flex;align-items:center;gap:10px;font-size:12px}
+.pf-check{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px}
+.pf-check.yes{background:var(--sage-l);color:var(--sage)}
+.plan-cta{display:block;width:calc(100% - 56px);margin:0 28px 28px;padding:13px;border-radius:9px;text-align:center;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;transition:all 0.2s}
+.plan-cta.dark{background:var(--char);color:var(--cream)}
+.plan-cta.dark:hover{background:var(--gold);color:var(--char)}
+.plan-cta.gold{background:var(--gold);color:var(--char)}
+.plan-cta.gold:hover{background:var(--gold-l)}
+.plan-cta.outline{background:transparent;border:1.5px solid var(--border);color:var(--char)}
+.plan-cta.outline:hover{border-color:var(--sage);color:var(--sage)}
+.plans-note{text-align:center;margin-top:36px;font-size:12px;color:var(--muted)}
+.plans-note strong{color:var(--char);font-weight:600}
+
+/* ── DEPOIMENTOS ── */
+.testi{background:var(--char);padding:96px 24px;overflow:hidden}
+.testi-header{text-align:center;margin-bottom:56px}
+.testi-header .section-label{color:var(--gold)}
+.testi-header .section-h2{color:var(--cream)}
+.testi-header .section-h2 em{color:var(--gold)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tcard{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;position:relative;transition:transform 0.25s,background 0.25s}
+.tcard:hover{transform:translateY(-4px);background:rgba(255,255,255,0.07)}
+.tcard.featured{background:rgba(184,145,90,0.1);border-color:rgba(184,145,90,0.3)}
+.tcard-quote{font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--gold);line-height:0.7;margin-bottom:14px;font-style:italic}
+.tcard-text{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,0.75);line-height:1.7;font-style:italic;margin-bottom:22px}
+.tcard-stars{display:flex;gap:3px;margin-bottom:18px}
+.star{color:var(--gold);font-size:13px}
+.tcard-author{display:flex;align-items:center;gap:12px}
+.ta-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;flex-shrink:0}
+.ta-name{font-size:13px;color:rgba(255,255,255,0.8);font-weight:500;margin-bottom:2px}
+.ta-plan{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.06em}
+.testi-numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.07);border-radius:14px;margin-top:64px;overflow:hidden}
+.tn{padding:28px;background:var(--char);text-align:center}
+.tn-val{font-family:'Playfair Display',serif;font-size:36px;font-weight:500;color:var(--cream);line-height:1;margin-bottom:6px}
+.tn-val span{color:var(--gold)}
+.tn-label{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.06em}
+
+/* ── COMPARAÇÃO ── */
+.compare{background:var(--white)}
+.compare-inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.compare-list{display:flex;flex-direction:column;gap:0}
+.ci{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);font-size:13px}
+.ci:last-child{border-bottom:none}
+.ci-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.ci-ico.no{background:#FDE8E6;color:#C0392B}
+.ci-ico.yes{background:var(--sage-l);color:var(--sage)}
+.compare-visual{background:linear-gradient(135deg,var(--char) 0%,#2e2a24 100%);border-radius:24px;padding:40px 32px;position:relative;overflow:hidden}
+.cv-label{font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px}
+.cv-title{font-family:'Playfair Display',serif;font-size:22px;color:#fff;margin-bottom:24px;line-height:1.3}
+.cv-savings{background:rgba(184,145,90,0.15);border:1px solid rgba(184,145,90,0.25);border-radius:12px;padding:16px 20px;margin-top:20px}
+.cvs-label{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px}
+.cvs-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:500;color:var(--gold)}
+.cvs-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:12px}
+.price-row:last-of-type{border-bottom:none}
+.price-row span{color:rgba(255,255,255,0.5)}
+.price-row strong{color:#fff;font-weight:500}
+.price-row.strike span{text-decoration:line-through;color:rgba(255,255,255,0.25)}
+.price-row.strike strong{color:rgba(255,255,255,0.25);text-decoration:line-through}
+
+/* ── GARANTIA ── */
+.garantia{background:var(--cream-d);padding:72px 24px;text-align:center}
+.g-inner{max-width:580px;margin:0 auto}
+.g-icon{width:64px;height:64px;background:var(--sage-l);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:28px}
+.g-title{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:14px}
+.g-desc{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--muted);font-style:italic;line-height:1.7}
+
+/* ── FAQ ── */
+.faq{background:var(--white)}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.faq-list{display:flex;flex-direction:column;gap:0;margin-top:8px}
+.fq{border-bottom:1px solid var(--border);overflow:hidden}
+.fq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 0;cursor:pointer;font-size:14px;font-weight:500;gap:16px;transition:color 0.15s}
+.fq-q:hover{color:var(--gold)}
+.fq-ico{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:14px;color:var(--muted)}
+.fq.open .fq-ico{background:var(--gold);border-color:var(--gold);color:var(--char);transform:rotate(45deg)}
+.fq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+.fq.open .fq-a{max-height:200px}
+.fq-a-inner{padding-bottom:18px;font-size:13px;color:var(--muted);line-height:1.7}
+.faq-side{position:sticky;top:100px}
+.faq-cta-box{background:var(--char);border-radius:18px;padding:36px;color:#fff;text-align:center}
+.fcb-icon{font-size:36px;margin-bottom:16px}
+.fcb-title{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:10px}
+.fcb-desc{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:24px}
+.fcb-btn{display:block;background:var(--gold);color:var(--char);font-family:'Jost',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:14px 28px;border-radius:9px;text-decoration:none;transition:background 0.15s}
+.fcb-btn:hover{background:var(--gold-l)}
+.fcb-note{margin-top:14px;font-size:11px;color:rgba(255,255,255,0.3)}
+
+/* ── CTA FINAL ── */
+.cta-final{background:linear-gradient(135deg,#1A1916 0%,#2a261f 50%,#1A1916 100%);padding:120px 24px;text-align:center;position:relative;overflow:hidden}
+.cta-final::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(184,145,90,0.15) 0%,transparent 65%)}
+.cta-final-inner{position:relative;z-index:1;max-width:680px;margin:0 auto}
+.cta-final .section-label{color:var(--gold)}
+.cta-final-h{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,58px);font-weight:500;color:var(--cream);line-height:1.1;margin-bottom:18px}
+.cta-final-h em{font-style:italic;color:var(--gold)}
+.cta-final-sub{font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:44px;line-height:1.6}
+.cta-final-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.cta-wpp{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:15px 32px;border-radius:9px;text-decoration:none;transition:all 0.2s}
+.cta-wpp:hover{background:#1ebe5a;transform:translateY(-2px)}
+.cta-final-note{margin-top:28px;font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:0.06em}
+
+/* ── FOOTER ── */
+footer{background:var(--char);padding:48px 24px 32px;color:rgba(255,255,255,0.35)}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.footer-logo{display:flex;align-items:center;gap:10px}
+.footer-mark{width:28px;height:28px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:11px;font-weight:600;color:var(--char)}
+.footer-name{font-family:'Playfair Display',serif;font-size:13px;color:rgba(255,255,255,0.6)}
+.footer-links{display:flex;gap:24px;font-size:11px;letter-spacing:0.06em}
+.footer-links a{color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.15s}
+.footer-links a:hover{color:rgba(255,255,255,0.7)}
+.footer-copy{width:100%;text-align:center;padding-top:32px;margin-top:32px;border-top:1px solid rgba(255,255,255,0.07);font-size:11px}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  .plans-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .testi-numbers{grid-template-columns:repeat(2,1fr)}
+  .how-grid{grid-template-columns:1fr;gap:48px}
+  .compare-inner{grid-template-columns:1fr;gap:32px}
+  .faq-grid{grid-template-columns:1fr}
+  .faq-side{position:static}
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+}
+@media(max-width:600px){
+  nav{padding:0 20px}
+  section{padding:72px 20px}
+  .hero{padding:88px 20px 72px}
+  .testi-numbers{grid-template-columns:repeat(2,1fr)}
+  .footer-inner{flex-direction:column;text-align:center}
+  .footer-links{flex-wrap:wrap;justify-content:center}
+}
+
+/* ── MOBILE NAV MENU ── */
+.mobile-menu{position:fixed;top:0;right:0;bottom:0;width:280px;background:var(--white);z-index:200;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);padding:80px 32px 40px;display:flex;flex-direction:column;gap:8px;box-shadow:-20px 0 60px rgba(0,0,0,0.1)}
+.mobile-menu.open{transform:none}
+.mobile-menu a{display:block;font-size:18px;font-family:'Playfair Display',serif;color:var(--char);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);transition:color 0.15s}
+.mobile-menu a:hover{color:var(--gold)}
+.mm-close{position:absolute;top:20px;right:20px;background:none;border:none;cursor:pointer;font-size:22px;color:var(--muted)}
+.mm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:199}
+.mm-overlay.open{display:block}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-mark">LC</div>
+    <span class="nav-name">Lesoá Club</span>
+  </a>
+  <div class="nav-links">
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#planos">Planos</a>
+    <a href="#depoimentos">Depoimentos</a>
+    <a href="#faq">FAQ</a>
+    <a href="#planos" class="nav-cta">Assinar agora</a>
+  </div>
+  <button class="nav-burger" onclick="openMM()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mm-overlay" id="mm-overlay" onclick="closeMM()"></div>
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mm-close" onclick="closeMM()">✕</button>
+  <a href="#como-funciona" onclick="closeMM()">Como funciona</a>
+  <a href="#planos" onclick="closeMM()">Planos</a>
+  <a href="#depoimentos" onclick="closeMM()">Depoimentos</a>
+  <a href="#faq" onclick="closeMM()">FAQ</a>
+  <a href="#planos" onclick="closeMM()" style="color:var(--gold);font-weight:600;border:none;margin-top:12px">→ Assinar agora</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grain"></div>
+    <div class="hero-blob-1"></div>
+    <div class="hero-blob-2"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge reveal"><span></span>Clínica de Estética Premium<span></span></div>
+    <h1 class="hero-h1 reveal delay-1">Beleza que <em>não</em> espera<br>pela sua agenda.</h1>
+    <p class="hero-sub reveal delay-2">Botox, preenchimento e bioestimuladores — incluídos no seu plano mensal. Sem surpresas, sem filas, sem desculpas.</p>
+    <div class="hero-actions reveal delay-3">
+      <a href="#planos" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Quero meu plano
+      </a>
+      <a href="#como-funciona" class="btn-secondary">ver como funciona</a>
+    </div>
+    <p class="hero-note reveal delay-4">✦ Sem taxa de adesão &nbsp;·&nbsp; Cancele quando quiser &nbsp;·&nbsp; Atendimento VIP</p>
+  </div>
+  <div class="hero-scroll">
+    <span>rolar</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="mi"><div class="mi-dot"></div>Botox Trimestral</div>
+    <div class="mi"><div class="mi-dot"></div>Preenchimento Labial</div>
+    <div class="mi"><div class="mi-dot"></div>Bioestimulador de Colágeno</div>
+    <div class="mi"><div class="mi-dot"></div>Harmonização Facial</div>
+    <div class="mi"><div class="mi-dot"></div>Lifting sem cirurgia</div>
+    <div class="mi"><div class="mi-dot"></div>Sem fila de espera</div>
+    <div class="mi"><div class="mi-dot"></div>Atendimento exclusivo</div>
+    <div class="mi"><div class="mi-dot"></div>Botox Trimestral</div>
+    <div class="mi"><div class="mi-dot"></div>Preenchimento Labial</div>
+    <div class="mi"><div class="mi-dot"></div>Bioestimulador de Colágeno</div>
+    <div class="mi"><div class="mi-dot"></div>Harmonização Facial</div>
+    <div class="mi"><div class="mi-dot"></div>Lifting sem cirurgia</div>
+    <div class="mi"><div class="mi-dot"></div>Sem fila de espera</div>
+    <div class="mi"><div class="mi-dot"></div>Atendimento exclusivo</div>
+  </div>
+</div>
+
+<!-- COMO FUNCIONA -->
+<section class="how" id="como-funciona">
+  <div class="container">
+    <div class="how-grid">
+      <div class="reveal-left">
+        <div class="section-label">Como funciona</div>
+        <h2 class="section-h2">Simples como<br><em>deve ser.</em></h2>
+        <p class="section-desc">Você escolhe o plano, agendamos no seu horário, e a gente cuida do resto. Sem complicação.</p>
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Escolha seu plano</h4>
+              <p>Trimestral, semestral ou anual. Cada um com sessões programadas e valor fixo mensal — sem surpresas na fatura.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Agende pelo portal exclusivo</h4>
+              <p>Você recebe um link personalizado pelo WhatsApp. Agendamento em menos de 2 minutos, sem precisar de senha.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Venha, relaxe e brilhe</h4>
+              <p>Chegue na hora certa, sem filas. Nossa equipe já sabe o seu histórico e preferências. Você sai renovada.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual reveal-right" style="position:relative;padding-bottom:50px">
+        <div class="how-card">
+          <div class="hc-badge">Portal da Paciente</div>
+          <div class="hc-name">Juliana Costa ✦</div>
+          <div class="hc-plan">Plano Semestral · Preenchimento</div>
+          <div class="hc-price">R$350 <span>/mês</span></div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:10px">Sessões do trimestre</div>
+          <div class="hc-sessions">
+            <div class="hc-dot"></div>
+            <div class="hc-dot"></div>
+            <div class="hc-dot used"></div>
+          </div>
+          <div class="hc-bar"><div class="hc-bar-fill"></div></div>
+          <div class="hc-info"><span>2 de 3 sessões usadas</span><span>Próxima: 27 jul</span></div>
+          <button class="hc-btn">Agendar próxima sessão →</button>
+        </div>
+        <div class="how-float">
+          <div class="hf-label">Economia no plano</div>
+          <div class="hf-val">R$480 / ano</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section class="plans" id="planos">
+  <div class="container">
+    <div class="plans-header reveal">
+      <div class="section-label">Nossos planos</div>
+      <h2 class="section-h2" style="text-align:center">Escolha o ritmo da<br><em>sua beleza.</em></h2>
+      <p class="section-desc" style="margin:0 auto;text-align:center">Todos os planos incluem avaliação gratuita, protocolo personalizado e acesso ao portal exclusivo.</p>
+    </div>
+    <div class="plans-grid">
+
+      <!-- TRIMESTRAL -->
+      <div class="plan reveal delay-1">
+        <div class="plan-top">
+          <div class="plan-icon" style="background:#FFF8EE">🌿</div>
+          <div class="plan-name">Trimestral</div>
+          <div class="plan-price"><sub>R$</sub>280</div>
+          <div class="plan-period">por mês · 3 meses</div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="pf"><div class="pf-check yes">✓</div>1 sessão de botox por trimestre</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Avaliação facial gratuita</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Portal exclusivo de agendamento</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Prontuário digital personalizado</div>
+          <div class="pf"><div class="pf-check yes">✓</div>WhatsApp da clínica (prioridade)</div>
+        </div>
+        <a href="#" class="plan-cta outline">Começar agora</a>
+      </div>
+
+      <!-- SEMESTRAL (featured) -->
+      <div class="plan featured reveal delay-2">
+        <div class="plan-ribbon">⭐ Mais popular</div>
+        <div class="plan-top">
+          <div class="plan-icon" style="background:#F5EDD8">✨</div>
+          <div class="plan-name">Semestral</div>
+          <div class="plan-price"><sub>R$</sub>350</div>
+          <div class="plan-period">por mês · 6 meses</div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="pf"><div class="pf-check yes">✓</div>2 sessões semestrais (botox + preench.)</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Avaliação facial gratuita</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Portal exclusivo de agendamento</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Prontuário digital personalizado</div>
+          <div class="pf"><div class="pf-check yes">✓</div>WhatsApp VIP (resposta em 1h)</div>
+          <div class="pf"><div class="pf-check yes">✓</div>1 retoque gratuito por período</div>
+        </div>
+        <a href="#" class="plan-cta gold">Quero esse plano</a>
+      </div>
+
+      <!-- ANUAL -->
+      <div class="plan reveal delay-3">
+        <div class="plan-top">
+          <div class="plan-icon" style="background:#EBF2EA">💎</div>
+          <div class="plan-name">Anual Premium</div>
+          <div class="plan-price"><sub>R$</sub>420</div>
+          <div class="plan-period">por mês · 12 meses</div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="pf"><div class="pf-check yes">✓</div>Bioestimulador semestral incluído</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Botox + preenchimento trimestral</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Avaliação e mapeamento facial VIP</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Portal + agendamento prioritário</div>
+          <div class="pf"><div class="pf-check yes">✓</div>WhatsApp dedicado 24h</div>
+          <div class="pf"><div class="pf-check yes">✓</div>2 retoques gratuitos / semestre</div>
+          <div class="pf"><div class="pf-check yes">✓</div>Acesso antecipado a novos tratamentos</div>
+        </div>
+        <a href="#" class="plan-cta dark">Assinar Premium</a>
+      </div>
+
+    </div>
+    <p class="plans-note">Sem taxa de adesão. <strong>Cancele a qualquer momento</strong> com 30 dias de aviso. Pagamento mensal via Pix ou cartão.</p>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="testi" id="depoimentos">
+  <div class="container">
+    <div class="testi-header reveal">
+      <div class="section-label">O que dizem nossas pacientes</div>
+      <h2 class="section-h2">Resultados que<br><em>falam por si.</em></h2>
+    </div>
+    <div class="testi-grid">
+
+      <div class="tcard reveal delay-1">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-text">Nunca pensei que cuidar do botox fosse tão fácil. Recebi o link pelo WhatsApp, agendei em 2 minutos e cheguei na hora — sem fila, sem espera. Parece que te conhecem de verdade.</div>
+        <div class="tcard-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="tcard-author">
+          <div class="ta-av" style="background:#7D9B76">JC</div>
+          <div><div class="ta-name">Juliana Costa</div><div class="ta-plan">Plano Semestral · 8 meses</div></div>
+        </div>
+      </div>
+
+      <div class="tcard featured reveal delay-2">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-text">Já fiz procedimento em vários lugares e nunca me senti tão bem cuidada. O plano anual valeu cada centavo — economizei mais de R$600 e ainda tenho os retoques inclusos. Indico pra todo mundo.</div>
+        <div class="tcard-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="tcard-author">
+          <div class="ta-av" style="background:#B8975A">FS</div>
+          <div><div class="ta-name">Fernanda Silva</div><div class="ta-plan">Plano Anual Premium · 1 ano</div></div>
+        </div>
+      </div>
+
+      <div class="tcard reveal delay-3">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-text">Tinha medo de procedimentos, mas a avaliação gratuita me deixou segura. A médica explicou tudo com calma, meu rosto ficou natural e eu me sinto muito mais confiante. Renovei o plano na hora.</div>
+        <div class="tcard-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="tcard-author">
+          <div class="ta-av" style="background:#9B7D9B">ML</div>
+          <div><div class="ta-name">Mariana Lima</div><div class="ta-plan">Plano Trimestral · 6 meses</div></div>
+        </div>
+      </div>
+
+      <div class="tcard reveal delay-1">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-text">O portal é incrível. Consigo ver meu histórico, quantas sessões me restam e agendar sem precisar falar com ninguém. Pra quem tem agenda lotada, isso é ouro.</div>
+        <div class="tcard-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="tcard-author">
+          <div class="ta-av" style="background:#7D7D9B">BM</div>
+          <div><div class="ta-name">Beatriz Moura</div><div class="ta-plan">Plano Semestral · 4 meses</div></div>
+        </div>
+      </div>
+
+      <div class="tcard reveal delay-2">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-text">Minha pele está completamente diferente depois do bioestimulador incluso no plano anual. Todo mundo pergunta o que eu fiz. É a melhor decisão estética que já tomei.</div>
+        <div class="tcard-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="tcard-author">
+          <div class="ta-av" style="background:#9B8E76">CA</div>
+          <div><div class="ta-name">Camila Alves</div><div class="ta-plan">Plano Anual Premium · 10 meses</div></div>
+        </div>
+      </div>
+
+      <div class="tcard reveal delay-3">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-text">Entrei no plano trimestral pra testar e nunca mais saí. O valor é justo, o resultado é consistente e me sinto uma prioridade. Não é clínica comum — é um clube mesmo.</div>
+        <div class="tcard-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <div class="tcard-author">
+          <div class="ta-av" style="background:#6B8E6B">PR</div>
+          <div><div class="ta-name">Paula Ribeiro</div><div class="ta-plan">Plano Semestral · 1 ano e 2 meses</div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="testi-numbers reveal">
+      <div class="tn"><div class="tn-val"><span>+</span>200</div><div class="tn-label">pacientes ativas</div></div>
+      <div class="tn"><div class="tn-val">4<span>.9</span></div><div class="tn-label">avaliação média</div></div>
+      <div class="tn"><div class="tn-val">98<span>%</span></div><div class="tn-label">renovam o plano</div></div>
+      <div class="tn"><div class="tn-val"><span>R$</span>480</div><div class="tn-label">economia média/ano</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARAÇÃO -->
+<section class="compare" id="comparacao">
+  <div class="container">
+    <div class="compare-inner">
+      <div class="reveal-left">
+        <div class="section-label">Por que assinar?</div>
+        <h2 class="section-h2">Avulso versus<br><em>Lesoá Club.</em></h2>
+        <p class="section-desc" style="margin-bottom:28px">A diferença entre pagar caro toda vez e investir com inteligência no próprio rosto.</p>
+        <div class="compare-list">
+          <div class="ci"><div class="ci-ico no">✕</div><span>Preço imprevisível a cada procedimento</span></div>
+          <div class="ci"><div class="ci-ico no">✕</div><span>Fila de espera de semanas</span></div>
+          <div class="ci"><div class="ci-ico no">✕</div><span>Sem histórico do seu rosto</span></div>
+          <div class="ci"><div class="ci-ico no">✕</div><span>Precisa ligar pra agendar</span></div>
+          <div class="ci"><div class="ci-ico no">✕</div><span>Sem retoque entre sessões</span></div>
+          <div class="ci"><div class="ci-ico yes">✓</div><span><strong>Lesoá Club:</strong> mensalidade fixa, agenda livre, portal exclusivo</span></div>
+        </div>
+      </div>
+      <div class="compare-visual reveal-right">
+        <div class="cv-label">Comparativo de custo</div>
+        <div class="cv-title">Botox avulso vs Plano Trimestral</div>
+        <div class="price-row strike"><span>Botox avulso (por sessão)</span><strong>R$450</strong></div>
+        <div class="price-row strike"><span>3 sessões avulsas / ano</span><strong>R$1.350</strong></div>
+        <div style="height:1px;background:rgba(255,255,255,0.15);margin:8px 0"></div>
+        <div class="price-row"><span>Lesoá Club Trimestral / mês</span><strong style="color:var(--gold)">R$280</strong></div>
+        <div class="price-row"><span>3 meses (1 sessão inclusa)</span><strong style="color:var(--gold)">R$840</strong></div>
+        <div class="cv-savings">
+          <div class="cvs-label">Você economiza por ciclo</div>
+          <div class="cvs-val">R$510</div>
+          <div class="cvs-sub">+ portal, agendamento VIP e prontuário digital incluídos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GARANTIA -->
+<section class="garantia">
+  <div class="g-inner reveal">
+    <div class="g-icon">🛡️</div>
+    <div class="section-label" style="text-align:center">Sem risco</div>
+    <h2 class="g-title">Experimente sem medo.</h2>
+    <p class="g-desc">Se depois da sua primeira sessão você não amar o resultado, conversamos e resolvemos. A nossa prioridade é que você se sinta incrível — e queremos ganhar sua confiança a cada sessão.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div>
+        <div class="section-label reveal">Perguntas frequentes</div>
+        <h2 class="section-h2 reveal delay-1">Tudo que você<br><em>precisa saber.</em></h2>
+        <div class="faq-list" style="margin-top:32px">
+          <div class="fq">
+            <div class="fq-q" onclick="toggleFQ(this)"><span>Posso cancelar o plano a qualquer momento?</span><div class="fq-ico">+</div></div>
+            <div class="fq-a"><div class="fq-a-inner">Sim. Você pode cancelar com 30 dias de aviso prévio, sem multa. Sessões já realizadas são descontadas proporcionalmente do reembolso. Queremos que você fique porque ama, não porque é obrigada.</div></div>
+          </div>
+          <div class="fq">
+            <div class="fq-q" onclick="toggleFQ(this)"><span>As sessões acumulam se eu não usar no mês?</span><div class="fq-ico">+</div></div>
+            <div class="fq-a"><div class="fq-a-inner">As sessões são programadas por ciclo (trimestral, semestral ou anual), não mensalmente. Você tem flexibilidade para usar dentro do período contratado, com agendamento fácil pelo portal.</div></div>
+          </div>
+          <div class="fq">
+            <div class="fq-q" onclick="toggleFQ(this)"><span>O plano cobre qual área do rosto?</span><div class="fq-ico">+</div></div>
+            <div class="fq-a"><div class="fq-a-inner">O protocolo é definido na avaliação gratuita junto com nossa médica. Botox cobre testa, glabela e olhos. Preenchimento é labial ou malar. Bioestimulador é facial completo. Tudo personalizado para o seu rosto.</div></div>
+          </div>
+          <div class="fq">
+            <div class="fq-q" onclick="toggleFQ(this)"><span>E se eu quiser trocar de plano?</span><div class="fq-ico">+</div></div>
+            <div class="fq-a"><div class="fq-a-inner">Fácil. Ao fim do ciclo atual você pode fazer upgrade ou downgrade sem burocracia. Pacientes do plano trimestral que migrarem para o semestral ganham 1 retoque extra de cortesia.</div></div>
+          </div>
+          <div class="fq">
+            <div class="fq-q" onclick="toggleFQ(this)"><span>Como funciona o agendamento?</span><div class="fq-ico">+</div></div>
+            <div class="fq-a"><div class="fq-a-inner">Após o cadastro, você recebe um link único pelo WhatsApp. Acessa o portal, escolhe data e horário disponíveis, e confirma. Tudo em menos de 2 minutos, sem precisar ligar nem criar conta com senha.</div></div>
+          </div>
+          <div class="fq">
+            <div class="fq-q" onclick="toggleFQ(this)"><span>Quais formas de pagamento?</span><div class="fq-ico">+</div></div>
+            <div class="fq-a"><div class="fq-a-inner">Pix, cartão de crédito ou débito, e boleto mensal. Pagamentos são automáticos e você recebe lembrete 3 dias antes. Sem surpresas.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="faq-side reveal-right">
+        <div class="faq-cta-box">
+          <div class="fcb-icon">💌</div>
+          <div class="fcb-title">Ainda tem dúvidas?</div>
+          <div class="fcb-desc">Nossa equipe responde pelo WhatsApp em menos de 1 hora em dias úteis. Pode perguntar à vontade.</div>
+          <a href="https://wa.me/5511999999999?text=Oi!%20Quero%20saber%20mais%20sobre%20o%20Le%C3%B3a%20Club" class="fcb-btn" target="_blank">
+            Falar no WhatsApp
+          </a>
+          <p class="fcb-note">Resposta em até 1h útil · Sem robôs</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-final-inner">
+    <div class="section-label reveal">Comece hoje</div>
+    <h2 class="cta-final-h reveal delay-1">Seu rosto merece<br><em>cuidado constante.</em></h2>
+    <p class="cta-final-sub reveal delay-2">Junte-se a mais de 200 mulheres que já transformaram a rotina estética em algo simples, previsível e transformador.</p>
+    <div class="cta-final-actions reveal delay-3">
+      <a href="#planos" class="btn-primary" style="font-size:13px;padding:16px 40px">Ver planos e assinar</a>
+      <a href="https://wa.me/5511999999999" class="cta-wpp" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Tirar dúvidas
+      </a>
+    </div>
+    <p class="cta-final-note reveal delay-4">✦ Primeira avaliação gratuita &nbsp;·&nbsp; Sem compromisso</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="footer-mark">LC</div>
+      <span class="footer-name">Lesoá Club</span>
+    </div>
+    <div class="footer-links">
+      <a href="#">Política de privacidade</a>
+      <a href="#">Termos de uso</a>
+      <a href="#">Instagram</a>
+      <a href="#">WhatsApp</a>
+    </div>
+    <div class="footer-copy">© 2026 Lesoá Club · Todos os direitos reservados · Beleza por assinatura</div>
+  </div>
+</footer>
+
+<script>
+// Navbar scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>20);
+});
+
+// Scroll reveal
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
+
+// FAQ accordion
+function toggleFQ(btn){
+  const fq=btn.closest('.fq');
+  const isOpen=fq.classList.contains('open');
+  document.querySelectorAll('.fq.open').forEach(f=>f.classList.remove('open'));
+  if(!isOpen)fq.classList.add('open');
+}
+
+// Mobile menu
+function openMM(){
+  document.getElementById('mobile-menu').classList.add('open');
+  document.getElementById('mm-overlay').classList.add('open');
+}
+function closeMM(){
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('mm-overlay').classList.remove('open');
+}
+</script>
+</body>
+</html>
